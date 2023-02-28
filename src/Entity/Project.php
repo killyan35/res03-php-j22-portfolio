@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProjectRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,6 +38,16 @@ class Project
      * @ORM\Column(type="string", length=255)
      */
     private $Description;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ProjectImage::class, mappedBy="Project")
+     */
+    private $projectImages;
+
+    public function __construct()
+    {
+        $this->projectImages = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -86,6 +98,36 @@ class Project
     public function setDescription(string $Description): self
     {
         $this->Description = $Description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProjectImage>
+     */
+    public function getProjectImages(): Collection
+    {
+        return $this->projectImages;
+    }
+
+    public function addProjectImage(ProjectImage $projectImage): self
+    {
+        if (!$this->projectImages->contains($projectImage)) {
+            $this->projectImages[] = $projectImage;
+            $projectImage->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProjectImage(ProjectImage $projectImage): self
+    {
+        if ($this->projectImages->removeElement($projectImage)) {
+            // set the owning side to null (unless already changed)
+            if ($projectImage->getProject() === $this) {
+                $projectImage->setProject(null);
+            }
+        }
 
         return $this;
     }

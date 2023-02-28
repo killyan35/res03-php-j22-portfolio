@@ -23,16 +23,24 @@ security:
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
+            json_login:
+                # api_login is a route we will create below
+                check_path: api_login
+            logout:
+                path: app_logout
 
+                # where to redirect after logout
+                # target: app_any_route
             form_login:
                 # "app_login" is the name of the route created previously
                 login_path: app_login
                 check_path: app_login
+                enable_csrf: true
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+         - { path: ^/project, roles: ROLE_USER }
 
 when@test:
 # config/packages/security.yaml
